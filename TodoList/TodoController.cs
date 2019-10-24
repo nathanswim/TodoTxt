@@ -14,45 +14,67 @@ namespace TodoList
         public void Input(string commandText)
         {
             var command = GetCommand(commandText);
-            command.Execute(todo);
+            var item = GetItem(commandText);
+            command.Execute(todo, item);
+
         }
 
-        private TodoCommand GetCommand(string commandText)
+        private ITodoCommand GetCommand(string commandText)
         {
             var tokens = commandText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var command = tokens[0].ToLowerInvariant();
-            var item = string.Join(' ', tokens, 1, tokens.Length - 1);
-            return new TodoCommand(command, item);
+            if (command == "add")
+                return new AddTodoCommand();
+            else if (command == "del")
+                return new RemoveTodoCommand();
+            else if (command == "complete")
+                return new CompleteTodoCommand();
+            return new EmptyTodoCommand();
+        }
+
+        private string GetItem(string commandText)
+        {
+            var tokens = commandText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(' ', tokens, 1, tokens.Length - 1);
         }
     }
 
-    public class TodoCommand
+    public interface ITodoCommand
     {
-        public TodoCommand(string command, string item)
+        void Execute(TodoList todo, string item);
+    }
+
+    public class AddTodoCommand : ITodoCommand
+    {
+        public void Execute(TodoList todo, string item)
         {
-            Command = command;
-            Item = item;
+            todo.Add(item);
         }
+    }
 
-        public string Command { get; }
-        public string Item { get; }
-
-        public void Execute(TodoList todo)
+    public class RemoveTodoCommand : ITodoCommand
+    {
+        public void Execute(TodoList todo, string item)
         {
-            if (Command == "add")
-            {
-                todo.Add(Item);
-            }
-            else if (Command == "del")
-            {
-                var index = int.Parse(Item) - 1;
-                todo.Remove(index);
-            }
-            else if (Command == "complete")
-            {
-                var index = int.Parse(Item) - 1;
-                todo.Complete(index);
-            }
+            var index = int.Parse(item) - 1;
+            todo.Remove(index);
+        }
+    }
+
+    public class CompleteTodoCommand : ITodoCommand
+    {
+        public void Execute(TodoList todo, string item)
+        {
+            var index = int.Parse(item) - 1;
+            todo.Complete(index);
+        }
+    }
+
+    public class EmptyTodoCommand : ITodoCommand
+    {
+
+        public void Execute(TodoList todo, string item)
+        {
         }
     }
 }
