@@ -1,0 +1,17 @@
+﻿x add
+x remove
+x list
+x complete
+filter
+project
+category
+priority
+backup
+remove display specific behavior from todo list object.
+completed sorts to end
+introduce TodoItem that parses input.
+command objects?
+no user input -> display help?
+
+reference: https://github.com/todotxt/todo.txt
+reference: http://todotxt.org/
