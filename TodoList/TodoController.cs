@@ -14,21 +14,7 @@ namespace TodoList
         public void Input(string commandText)
         {
             var command = GetCommand(commandText);
-            if (command.Command == "add")
-            {
-                todo.Add(command.Item);
-            }
-            else if (command.Command == "del")
-            {
-                var index = int.Parse(command.Item) - 1;
-                todo.Remove(index);
-            }
-            else if (command.Command == "complete")
-            {
-                var index = int.Parse(command.Item) - 1;
-                todo.Complete(index);
-            }
-
+            command.Execute(todo);
         }
 
         private TodoCommand GetCommand(string commandText)
@@ -50,5 +36,23 @@ namespace TodoList
 
         public string Command { get; }
         public string Item { get; }
+
+        public void Execute(TodoList todo)
+        {
+            if (Command == "add")
+            {
+                todo.Add(Item);
+            }
+            else if (Command == "del")
+            {
+                var index = int.Parse(Item) - 1;
+                todo.Remove(index);
+            }
+            else if (Command == "complete")
+            {
+                var index = int.Parse(Item) - 1;
+                todo.Complete(index);
+            }
+        }
     }
 }
