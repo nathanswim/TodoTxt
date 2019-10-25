@@ -13,15 +13,20 @@ namespace TodoList
 
         public void Input(string commandText)
         {
-            var command = GetCommand(commandText);
-            var item = GetItem(commandText);
+            var args = commandText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            Input(args);
+        }
+
+        public void Input(string[] args)
+        {
+            var command = GetCommand(args);
+            var item = GetItem(args);
             command.Execute(todo, item);
 
         }
 
-        private ITodoCommand GetCommand(string commandText)
+        private ITodoCommand GetCommand(string[] tokens)
         {
-            var tokens = commandText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var command = tokens[0].ToLowerInvariant();
             if (command == "add")
                 return new AddTodoCommand();
@@ -32,9 +37,8 @@ namespace TodoList
             return new EmptyTodoCommand();
         }
 
-        private string GetItem(string commandText)
+        private string GetItem(string[] tokens)
         {
-            var tokens = commandText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             return string.Join(' ', tokens, 1, tokens.Length - 1);
         }
     }
@@ -72,7 +76,6 @@ namespace TodoList
 
     public class EmptyTodoCommand : ITodoCommand
     {
-
         public void Execute(TodoList todo, string item)
         {
         }

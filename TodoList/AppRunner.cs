@@ -11,8 +11,7 @@
 
         public void Run(string[] args)
         {
-            var commandText = string.Join(' ', args);
-            controller.Input(commandText);
+            controller.Input(args);
         }
     }
 }
